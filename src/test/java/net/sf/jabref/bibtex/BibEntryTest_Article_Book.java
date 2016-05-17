@@ -86,7 +86,7 @@ public class BibEntryTest_Article_Book {
     }
 
     @Test
-    public void testArticleAllRequiredFields() {
+    public void testArticleAllRequiredFields() throws IOException{
         StringWriter stringWriter = new StringWriter();
 
         BibEntry entry = new BibEntry();
@@ -97,12 +97,9 @@ public class BibEntryTest_Article_Book {
         entry.setField("title", "The Best Brownie");
         entry.setField("year", "2016");
 
-        try {
-            writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
-        }
-        catch (IOException e){
-            fail();
-        }
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
 
         String actual = stringWriter.toString();
 
@@ -119,7 +116,7 @@ public class BibEntryTest_Article_Book {
     }
 
     @Test
-    public void testBookAllRequiredFields() {
+    public void testBookAllRequiredFields() throws IOException{
         StringWriter stringWriter = new StringWriter();
 
         BibEntry entry = new BibEntry();
@@ -131,12 +128,9 @@ public class BibEntryTest_Article_Book {
         entry.setField("year", "2016");
         entry.setField("editor","Duck Rogers");
 
-        try {
-            writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
-        }
-        catch (IOException e){
-            fail();
-        }
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
 
         String actual = stringWriter.toString();
 
@@ -149,7 +143,6 @@ public class BibEntryTest_Article_Book {
                 "  editor    = {Duck Rogers}," + Globals.NEWLINE +
                 "}" + Globals.NEWLINE;
         // @formatter:on
-
         assertEquals(expected, actual);
     }
 }
