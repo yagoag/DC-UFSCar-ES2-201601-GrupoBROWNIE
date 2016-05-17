@@ -19,6 +19,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParseException;
@@ -340,6 +341,27 @@ public class BibEntry {
         changed = true;
 
         String oldValue = fields.get(fieldName);
+
+        if(name.equals("date"))
+        {
+            if(!isDateValid(value, "dd/mm/yyyy")) {
+                return;
+            }
+        }
+
+        if(name.equals("bibtexkey"))
+        {
+            if(value.length() < 2)
+            {
+                return;
+            } else {
+                if(!Character.isLetter(value.charAt(0)))
+                {
+                    return;
+                }
+            }
+        }
+
         try {
             // We set the field before throwing the changeEvent, to enable
             // the change listener to access the new value if the change
@@ -625,5 +647,17 @@ public class BibEntry {
     @Override
     public int hashCode() {
         return Objects.hash(type, fields);
+    }
+
+    public static boolean isDateValid(String date, String dateFormat)
+    {
+        try {
+            DateFormat df = new SimpleDateFormat(dateFormat);
+            df.setLenient(false);
+            df.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }
