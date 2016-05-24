@@ -644,13 +644,32 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                         CheckBoxMessage cbm = new CheckBoxMessage(
                                 Localization.lang("There are possible duplicates (marked with an icon) that haven't been resolved. Continue?"),
                                 Localization.lang("Disable this confirmation dialog"), false);
-                        int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this,
-                                cbm, Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
+
+                        Object[] opt = {"Continue", "Create new database", "Cancel"};
+
+                        int answer = JOptionPane.showOptionDialog(ImportInspectionDialog.this,
+                                cbm,
+                                "Choose an option",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                opt,
+                                opt[0]);
+
                         if (cbm.isSelected()) {
                             Globals.prefs.putBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION, false);
                         }
-                        if (answer == JOptionPane.NO_OPTION) {
-                            return;
+//                        if (answer == JOptionPane.NO_OPTION) {
+//                            return;
+//                        }
+                        switch (answer) {
+                            case 0:
+                                break;
+                            case 1:
+                                System.out.println("Do stuff");
+                                break;
+                            case 2:
+                                return;
                         }
                         break;
                     }
