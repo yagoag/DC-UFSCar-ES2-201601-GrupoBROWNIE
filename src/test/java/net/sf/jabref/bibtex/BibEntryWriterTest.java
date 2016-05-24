@@ -52,7 +52,7 @@ public class BibEntryWriterTest {
         entry.setField("author", "Foo Bar");
         entry.setField("journal", "International Journal of Something");
         //set an optional field
-        entry.setField("date", "10061992");
+        entry.setField("bibtexkey", "22");
         entry.setField("number", "1");
         entry.setField("note", "some note");
 
