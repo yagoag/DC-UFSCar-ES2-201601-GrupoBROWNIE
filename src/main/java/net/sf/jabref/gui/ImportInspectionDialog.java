@@ -26,6 +26,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,6 +75,8 @@ import net.sf.jabref.MetaData;
 import net.sf.jabref.bibtex.FieldProperties;
 import net.sf.jabref.bibtex.InternalBibtexFields;
 import net.sf.jabref.bibtex.comparator.FieldComparator;
+import net.sf.jabref.exporter.BibDatabaseWriter;
+import net.sf.jabref.exporter.SavePreferences;
 import net.sf.jabref.external.DownloadExternalFile;
 import net.sf.jabref.external.ExternalFileMenuItem;
 import net.sf.jabref.gui.DuplicateResolverDialog.DuplicateResolverResult;
@@ -652,7 +656,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                         //int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this cbm, Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
 
 
-                        Object[] colours = {"Create a new database with duplicate", "Yes", "No"};
+                        Object[] options = {"Create New Database", "Continue", "Cancel"};
 
                         int answer = JOptionPane.showOptionDialog(null,
                                 cbm,
@@ -660,8 +664,8 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.QUESTION_MESSAGE,
                                 null,
-                                colours,
-                                colours[0]);
+                                options,
+                                options[0]);
 
 //                        System.out.println("The users likes " + colours[answer]);
 //
@@ -673,15 +677,19 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
 //                        }
 
                         if (answer == 0) {
-//                            NewDatabaseAction db = new NewDatabaseAction(frame, BIBTEX);
-                            Defaults defaults = new Defaults(BibDatabaseMode.fromPreference(Globals.prefs.getBoolean(JabRefPreferences.BIBLATEX_DEFAULT_MODE)));
-                            BasePanel bp = new BasePanel(frame, new BibDatabaseContext(defaults), Globals.prefs.getDefaultEncoding());
-                            BibDatabase db = new BibDatabase();
-                            db.insertEntry(entry);
-//                            bp.
-//                            db.
 
+                            //CREATE A NEW DATABASE
+                            BibDatabase db = new BibDatabase();
+                            //ADD ENTRY TO THE NEW DATABASE
+                            db.insertEntry(entry);
+                            //CREATE A NEW DEFAULTS AND A NEW PANEL
+                            Defaults defaults = new Defaults(BibDatabaseMode.fromPreference(Globals.prefs.getBoolean(JabRefPreferences.BIBLATEX_DEFAULT_MODE)));
+                            BasePanel bp = new BasePanel(frame, bibDatabaseContext, Globals.prefs.getDefaultEncoding());
+                            //CREATE A NEW TAB ADDING THE PANEL
+                            frame.addTab(bp, true);
+                            bp.markBaseChanged();
                             return;
+
                         } else if (answer == 1) {
 
                         } else {
