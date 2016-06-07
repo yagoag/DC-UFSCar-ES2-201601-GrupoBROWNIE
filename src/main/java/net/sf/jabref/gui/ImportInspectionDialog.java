@@ -653,9 +653,6 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                                 Localization.lang("There are possible duplicates (marked with an icon) that haven't been resolved. Continue?"),
                                 Localization.lang("Disable this confirmation dialog"), false);
 
-                        //int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this cbm, Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
-
-
                         Object[] options = {"Create New Database", "Continue", "Cancel"};
 
                         int answer = JOptionPane.showOptionDialog(null,
