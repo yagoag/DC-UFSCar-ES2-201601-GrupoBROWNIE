@@ -26,6 +26,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,9 +75,12 @@ import net.sf.jabref.MetaData;
 import net.sf.jabref.bibtex.FieldProperties;
 import net.sf.jabref.bibtex.InternalBibtexFields;
 import net.sf.jabref.bibtex.comparator.FieldComparator;
+import net.sf.jabref.exporter.BibDatabaseWriter;
+import net.sf.jabref.exporter.SavePreferences;
 import net.sf.jabref.external.DownloadExternalFile;
 import net.sf.jabref.external.ExternalFileMenuItem;
 import net.sf.jabref.gui.DuplicateResolverDialog.DuplicateResolverResult;
+import net.sf.jabref.gui.actions.NewDatabaseAction;
 import net.sf.jabref.gui.desktop.JabRefDesktop;
 import net.sf.jabref.gui.groups.GroupTreeNodeViewModel;
 import net.sf.jabref.gui.groups.UndoableChangeEntriesOfGroup;
@@ -119,6 +124,8 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import static net.sf.jabref.model.database.BibDatabaseMode.BIBTEX;
 
 /**
  * Dialog to allow the selection of entries as part of an Import.
@@ -627,6 +634,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
             // First check if we are supposed to warn about duplicates. If so,
             // see if there
             // are unresolved duplicates, and warn if yes.
+
             if (Globals.prefs.getBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION)) {
                 for (BibEntry entry : entries) {
 
@@ -645,31 +653,47 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                                 Localization.lang("There are possible duplicates (marked with an icon) that haven't been resolved. Continue?"),
                                 Localization.lang("Disable this confirmation dialog"), false);
 
-                        Object[] opt = {"Continue", "Create new database", "Cancel"};
+                        //int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this cbm, Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
 
-                        int answer = JOptionPane.showOptionDialog(ImportInspectionDialog.this,
+
+                        Object[] options = {"Create New Database", "Continue", "Cancel"};
+
+                        int answer = JOptionPane.showOptionDialog(null,
                                 cbm,
-                                "Choose an option",
+                                "There are possible duplicates",
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.QUESTION_MESSAGE,
                                 null,
-                                opt,
-                                opt[0]);
+                                options,
+                                options[0]);
 
-                        if (cbm.isSelected()) {
-                            Globals.prefs.putBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION, false);
-                        }
+//                        System.out.println("The users likes " + colours[answer]);
+//
+//                        if (cbm.isSelected()) {
+//                            Globals.prefs.putBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION, false);
+//                        }
 //                        if (answer == JOptionPane.NO_OPTION) {
 //                            return;
 //                        }
-                        switch (answer) {
-                            case 0:
-                                break;
-                            case 1:
-                                System.out.println("Do stuff");
-                                break;
-                            case 2:
-                                return;
+
+                        if (answer == 0) {
+
+                            //CREATE A NEW DATABASE
+                            BibDatabase db = new BibDatabase();
+                            //ADD ENTRY TO THE NEW DATABASE
+                            db.insertEntry(entry);
+                            //CREATE A NEW DEFAULTS AND A NEW PANEL
+                            Defaults defaults = new Defaults(BibDatabaseMode.fromPreference(Globals.prefs.getBoolean(JabRefPreferences.BIBLATEX_DEFAULT_MODE)));
+                            BasePanel bp = new BasePanel(frame, bibDatabaseContext, Globals.prefs.getDefaultEncoding());
+                            //CREATE A NEW TAB ADDING THE PANEL
+                            frame.addTab(bp, true);
+                            bp.markBaseChanged();
+                            return;
+
+                        } else if (answer == 1) {
+
+                        } else {
+                            return;
                         }
                         break;
                     }
