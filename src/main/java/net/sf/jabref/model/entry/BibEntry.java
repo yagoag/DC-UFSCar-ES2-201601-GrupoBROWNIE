@@ -342,37 +342,37 @@ public class BibEntry {
 
         String oldValue = fields.get(fieldName);
 
-        if (this.getType().equals("article") || this.getType().equals("book")) {
-            // VERIFICA SE A DATA ESTÁ CORRETA
-            if(name.equals("year"))
-            {
-                try {
-                    if (Integer.valueOf(value) < 0) {
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    return;
-                }
-            }
-            // VERIFICA SE O BIBTEXKEY É VALIDO
-            if(name.equals("bibtexkey"))
-            {
-                if(value.length() < 2)
-                {
-                    return;
-                } else {
-                    if(!Character.isLetter(value.charAt(0)))
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-
         try {
             // We set the field before throwing the changeEvent, to enable
             // the change listener to access the new value if the change
             // sets off a change in database sorting etc.
+
+            /* Validate the year field with the minimum and maximum possible
+             * on the java Calendar class (Palomino)
+             */
+            if (this.getType().equals("article") || this.getType().equals("book")) {
+                if (fieldName.equals("year")) {
+                    int valueInt = Integer.parseInt(value);
+                    Calendar calendar = Calendar.getInstance();
+
+                    if (valueInt < calendar.getActualMinimum(Calendar.YEAR)) {
+                        valueInt = calendar.getActualMinimum(Calendar.YEAR);
+                        try {
+                            value = Integer.toString(valueInt);
+                        } catch (NumberFormatException n) {
+                            value = Integer.toString(Integer.MIN_VALUE);
+                        }
+                    }
+                    if (valueInt > calendar.getActualMaximum(Calendar.YEAR)) {
+                        valueInt = calendar.getActualMaximum(Calendar.YEAR);
+                        try {
+                            value = Integer.toString(valueInt);
+                        } catch (NumberFormatException n) {
+                            value = Integer.toString(Integer.MAX_VALUE);
+                        }
+                    }
+                }
+            }
             fields.put(fieldName, value);
             firePropertyChangedEvent(fieldName, oldValue, value);
         } catch (PropertyVetoException pve) {
