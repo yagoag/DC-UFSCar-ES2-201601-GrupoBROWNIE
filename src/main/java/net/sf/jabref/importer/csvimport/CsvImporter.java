@@ -26,8 +26,13 @@ public class CsvImporter extends ImportFormat {
 
     @Override
     public List<BibEntry> importEntries(InputStream stream, OutputPrinter printer) throws IOException {
+        if (stream == null) {
+            throw new IOException("No stream given.");
+        }
+
         List<BibEntry> bibitems = new ArrayList<>();
         BufferedReader in = new BufferedReader(ImportFormatReader.getReaderDefaultEncoding(stream));
+
 
         String line = in.readLine();
         while (line != null) {
