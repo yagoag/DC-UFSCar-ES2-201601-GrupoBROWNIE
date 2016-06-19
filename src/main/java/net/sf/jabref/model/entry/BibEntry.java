@@ -36,6 +36,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.JOptionPane;
+
 import net.sf.jabref.logic.layout.format.Number;
 import net.sf.jabref.model.database.BibDatabase;
 
@@ -375,12 +377,38 @@ public class BibEntry {
 
                 // VERIFICA SE O BIBTEXKEY É VALIDO
                 if(name.equals("bibtexkey")){
-                    if(value.length() < 2)
+                    if(value.length() < 2) {
+                        JOptionPane.showMessageDialog(null, "BibTex Key is too short!");
                         return;
-                    else if (!Character.isLetter(value.charAt(0)))
+                    } else if (!Character.isLetter(value.charAt(0))) {
+                        JOptionPane.showMessageDialog(null, "First character of BibTex Key must be a letter!");
                         return;
+                    }
+                }
+
+                if (name.equals("number")) {
+                    if (value.length() > 0) {
+                        try {
+                            Integer.parseInt(value);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Invalid number!");
+                            return;
+                        }
+                    }
                 }
             }
+
+            if (getType().equals("article")) {
+                if (value.length() > 0) {
+                    try {
+                        Integer.parseInt(value);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Invalid page number!");
+                        return;
+                    }
+                }
+            }
+
             fields.put(fieldName, value);
             firePropertyChangedEvent(fieldName, oldValue, value);
         } catch (PropertyVetoException pve) {
