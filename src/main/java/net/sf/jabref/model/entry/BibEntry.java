@@ -372,6 +372,14 @@ public class BibEntry {
                         }
                     }
                 }
+
+                // VERIFICA SE O BIBTEXKEY É VALIDO
+                if(name.equals("bibtexkey")){
+                    if(value.length() < 2)
+                        return;
+                    else if (!Character.isLetter(value.charAt(0)))
+                        return;
+                }
             }
             fields.put(fieldName, value);
             firePropertyChangedEvent(fieldName, oldValue, value);
