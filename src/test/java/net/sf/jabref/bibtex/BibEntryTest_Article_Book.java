@@ -205,4 +205,66 @@ public class BibEntryTest_Article_Book {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testBibtexkeyValid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "Br1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{Br1234," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBibtexkeyInvalid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
 }
