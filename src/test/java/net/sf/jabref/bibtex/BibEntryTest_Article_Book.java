@@ -267,4 +267,199 @@ public class BibEntryTest_Article_Book {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testArticleNumberValid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+        entry.setField("number", "32");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "  number  = {32}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testArticleNumberInvalid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+        entry.setField("number", "L32");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testArticlePagesValid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+        entry.setField("pages", "42");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "  pages   = {42}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testArticlePagesInvalid() throws IOException, NumberFormatException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("article");
+        //set a required field
+        entry.setField("bibtexkey", "1234");
+        entry.setField("author", "Brownie");
+        entry.setField("journal", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "-999999999");
+        entry.setField("pages", "L32");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Article{," + Globals.NEWLINE +
+                "  author  = {Brownie}," + Globals.NEWLINE +
+                "  title   = {The Best Brownie}," + Globals.NEWLINE +
+                "  journal = {IJS}," + Globals.NEWLINE +
+                "  year    = {1}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBookNumberValid() throws IOException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("book");
+        //set a required field
+        entry.setField("author", "Brownie");
+        entry.setField("publisher", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "2016");
+        entry.setField("editor","Duck Rogers");
+        entry.setField("number","40");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Book{," + Globals.NEWLINE +
+                "  title     = {The Best Brownie}," + Globals.NEWLINE +
+                "  publisher = {IJS}," + Globals.NEWLINE +
+                "  year      = {2016}," + Globals.NEWLINE +
+                "  author    = {Brownie}," + Globals.NEWLINE +
+                "  editor    = {Duck Rogers}," + Globals.NEWLINE +
+                "  number    = {40}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBookNumberInvalid() throws IOException{
+        StringWriter stringWriter = new StringWriter();
+
+        BibEntry entry = new BibEntry();
+        entry.setType("book");
+        //set a required field
+        entry.setField("author", "Brownie");
+        entry.setField("publisher", "IJS");
+        entry.setField("title", "The Best Brownie");
+        entry.setField("year", "2016");
+        entry.setField("editor","Duck Rogers");
+        entry.setField("number","L40");
+
+
+        writer.write(entry, stringWriter, BibDatabaseMode.BIBTEX);
+
+
+        String actual = stringWriter.toString();
+
+        // @formatter:off
+        String expected = Globals.NEWLINE + "@Book{," + Globals.NEWLINE +
+                "  title     = {The Best Brownie}," + Globals.NEWLINE +
+                "  publisher = {IJS}," + Globals.NEWLINE +
+                "  year      = {2016}," + Globals.NEWLINE +
+                "  author    = {Brownie}," + Globals.NEWLINE +
+                "  editor    = {Duck Rogers}," + Globals.NEWLINE +
+                "}" + Globals.NEWLINE;
+        // @formatter:on
+        assertEquals(expected, actual);
+    }
 }
