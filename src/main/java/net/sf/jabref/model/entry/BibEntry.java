@@ -399,12 +399,14 @@ public class BibEntry {
             }
 
             if (getType().equals("article")) {
-                if (value.length() > 0) {
-                    try {
-                        Integer.parseInt(value);
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Invalid page number!");
-                        return;
+                if (name.equals("pages")) {
+                    if (value.length() > 0) {
+                        try {
+                            Integer.parseInt(value);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Invalid page number!");
+                            return;
+                        }
                     }
                 }
             }
